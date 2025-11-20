@@ -1,0 +1,68 @@
+import java.util.Scanner;
+
+public class AplikasiPeminjamanBuku {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Masukkan NIM Mahasiswa: ");
+        String nim = scanner.nextLine();
+
+        System.out.print("Masukkan Nama Mahasiswa: ");
+        String nama = scanner.nextLine();
+
+        Mahasiswa mahasiswa = new Mahasiswa(nim, nama);
+
+        boolean addMoreBooks = true;
+        int bookCount = 0;
+
+        while (addMoreBooks) {
+            System.out.print("Masukkan ISBN Buku: ");
+            String isbn = scanner.nextLine();
+
+            System.out.print("Masukkan Judul Buku: ");
+            String judul = scanner.nextLine();
+
+            Buku buku = new Buku(isbn, judul);
+            mahasiswa.pinjam(buku);
+            bookCount++;
+
+            System.out.print("Apakah Anda ingin menambah buku lagi? (ya/tidak): ");
+            String response = scanner.nextLine().toLowerCase();
+
+            if (!response.equals("ya") && !response.equals("y")) {
+                addMoreBooks = false;
+            }
+        }
+
+        displayStudentData(mahasiswa);
+
+        scanner.close();
+    }
+
+    public static void displayStudentData(Mahasiswa mahasiswa) {
+        System.out.println("\n======================================================");
+        System.out.println("Nim     : " + mahasiswa.getNim());
+        System.out.println("Nama    : " + mahasiswa.getNama());
+        System.out.println("----------------------------------------------------------------------------------------");
+        System.out.println("| No |           Isbn                            |                           Judul                                                                                   |");
+        System.out.println("----------------------------------------------------------------------------------------");
+
+        int no = 1;
+        for (Buku buku : mahasiswa.getBukuPinjaman()) {
+            String isbnFormatted = formatString(buku.getIsbn(), 40);
+            String judulFormatted = formatString(buku.getJudul(), 70);
+            System.out.println("| " + String.format("%d", no) + "  | " + isbnFormatted + " | " + judulFormatted + " |");
+            no++;
+        }
+
+        System.out.println("----------------------------------------------------------------------------------------");
+    }
+
+    public static String formatString(String str, int width) {
+        if (str.length() >= width) {
+            return str.substring(0, width);
+        } else {
+            return String.format("%-" + width + "s", str);
+        }
+    }
+}
